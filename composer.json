@@ -1,0 +1,42 @@
+{
+    "name": "devmadeit/boiler",
+    "description": "Laravel Model Boiler",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "doctrine/dbal": "4.1.x-dev",
+        "illuminate/support": "^11.0@dev",
+        "illuminate/console": "^11.0@dev",
+        "spatie/laravel-package-tools": "dev-main"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.0",
+        "laravel/pint": "^1.13",
+        "orchestra/testbench": "9.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "DevMadeIt\\Boiler\\": "src/"
+        }
+    },
+    "scripts": {
+      "cs": "./vendor/bin/pint --test",
+      "csf": "./vendor/bin/pint",
+      "stan": "./vendor/bin/phpstan analyse --memory-limit=2G"
+    },
+    "authors": [
+        {
+            "name": "Jan Madeyski",
+            "email": "jan.madeyski@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DevMadeIt\\Boiler\\BoilerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
