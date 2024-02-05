@@ -1,5 +1,5 @@
 {
-    "name": "devmadeit/boiler",
+    "name": "laravel-model-boiler/boiler",
     "description": "Laravel Model Boiler",
     "type": "library",
     "license": "MIT",
