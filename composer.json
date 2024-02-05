@@ -6,8 +6,8 @@
     "require": {
         "php": "^8.2",
         "doctrine/dbal": "4.1.x-dev",
-        "illuminate/support": "^11.0@dev",
-        "illuminate/console": "^11.0@dev",
+        "illuminate/support": "^10.0",
+        "illuminate/console": "^10.0",
         "spatie/laravel-package-tools": "dev-main"
     },
     "require-dev": {
