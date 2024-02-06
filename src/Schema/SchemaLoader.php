@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DevMadeIt\Boiler\Schema;
 
 use DevMadeIt\Boiler\Exceptions\BoilerException;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SchemaLoader
@@ -18,9 +17,9 @@ class SchemaLoader
     }
 
     /**
-     * @return Collection<ColumnSchema>
+     * @return ModelSchemaCollection<ColumnSchema>
      */
-    public function getColumns(): Collection
+    public function getColumns(): ModelSchemaCollection
     {
         $query = $this->getQuery();
         $columns = ModelSchemaCollection::fromArray(DB::select($query));

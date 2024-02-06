@@ -4,41 +4,40 @@ declare(strict_types=1);
 
 namespace DevMadeIt\Boiler;
 
-use ReflectionClass;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
+use DevMadeIt\Boiler\Generators\BaseGenerator;
+use DevMadeIt\Boiler\Generators\ResourceGenerator;
 use DevMadeIt\Boiler\Schema\DbSchemaLoader;
-use Illuminate\Console\Concerns\InteractsWithIO;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use ReflectionClass;
 
-class BoilerGenerator
+class BoilerGenerator extends BaseGenerator
 {
-    use InteractsWithIO;
-
     protected ReflectionClass $reflection;
 
     protected Model $model;
 
     protected DbSchemaLoader $schemaLoader;
 
+    protected Collection $schema;
+
     public function __construct(
         protected string $modelClassName,
     ) {
+        parent::__construct();
         $this->reflection = new ReflectionClass($this->modelClassName);
         $this->model = $this->reflection->newInstance();
         $this->schemaLoader = new DbSchemaLoader($this->model);
-        $this->output = new ConsoleOutput();
     }
 
     public function loadSchema(): void
     {
-        $this->schemaLoader->loadSchema();
+        $this->schema = $this->schemaLoader->loadSchema();
     }
 
     public function generate(): void
     {
-        $this->info("BoilerGenerator - generate");
+        $this->info('BoilerGenerator - generate');
 
         $this->generateAnnotations();
         $this->generateTypeScript();
@@ -55,14 +54,8 @@ class BoilerGenerator
 
     public function generateResources(): void
     {
-        $resourceName = Str::of($this->modelClassName)->afterLast('\\') . 'Resource';
-        $collectionName = Str::of($this->modelClassName)->afterLast('\\') . 'Collection';
-
-        $this->info("Resources");
-        $this->info("- resource: {$resourceName}");
-        $this->info("- collection: {$collectionName}");
-
-        Artisan::call('make:resource', ['name' => $resourceName]);
-        Artisan::call('make:resource', ['name' => $collectionName]);
+        $resourceGenerator = new ResourceGenerator($this->modelClassName, schema: $this->schema);
+        $resourceGenerator->generateResource();
+        $resourceGenerator->generateResourceCollection();
     }
 }

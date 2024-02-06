@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace DevMadeIt\Boiler;
 
-use Illuminate\Support\Str;
-use Illuminate\Console\Command;
-use DevMadeIt\Boiler\BoilerGenerator;
-use DevMadeIt\Boiler\Schema\SchemaLoader;
 use DevMadeIt\Boiler\Exceptions\BoilerException;
-use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
+use DevMadeIt\Boiler\Generators\BaseGenerator;
 use DevMadeIt\Boiler\Generators\TypescriptGenerator;
+use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
+use DevMadeIt\Boiler\Schema\SchemaLoader;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
-class Generator
+class Generator extends BaseGenerator
 {
     public string $model;
 
@@ -26,14 +26,12 @@ class Generator
 
     protected bool $generateTypescript = true;
 
-    public function __construct(
-        protected Command $command,
-    ) {
+    public function __construct()
+    {
+        parent::__construct();
         BoilerServiceProvider::forceConfigSet();
 
-        (new BoilerGenerator('\\App\\Models\\Project'))->loadSchema();
-
-        $this->modelsNamespace = config('boiler.models_namespace', $this->modelsNamespace);
+        $this->modelsNamespace = config('boiler.models_namespace', "{$this->rootNamespace()}\\Models\\");
         $this->generateTypescript = config('boiler.ts.generate', $this->generateTypescript);
     }
 
@@ -42,9 +40,9 @@ class Generator
         $this->initSchema($model);
 
         if ($this->generateTypescript) {
-            (new TypescriptGenerator($this->model, $this->command, $this->columns))->run();
+            (new TypescriptGenerator($this->model, $this->columns))->run();
         }
-        
+
         $boilerGenerator = new BoilerGenerator($this->modelClassName);
         $boilerGenerator->loadSchema();
         $boilerGenerator->generate();
@@ -62,10 +60,15 @@ class Generator
             throw new BoilerException("No model found '{$this->modelClassName}'");
         }
 
-        $this->command->info("Boiling '{$this->model}'");
-        $this->command->info("- using '{$this->modelClassName}' model");
+        $this->info("Boiling '{$this->model}'");
+        $this->info("- using '{$this->modelClassName}' model");
 
         $this->schemaLoader = new SchemaLoader($this->modelClassName);
         $this->columns = $this->schemaLoader->getColumns();
+    }
+
+    protected function rootNamespace(): string
+    {
+        return App::getNamespace();
     }
 }

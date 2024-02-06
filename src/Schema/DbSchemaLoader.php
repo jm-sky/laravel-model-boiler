@@ -24,7 +24,7 @@ class DbSchemaLoader
         DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
     }
 
-    public function loadSchema()
+    public function loadSchema(): Collection
     {
         $this->columns = collect(
             $this->model->getConnection()
@@ -47,6 +47,8 @@ class DbSchemaLoader
                 'foreignKey' => $foreignKey,
             ];
         });
+
+        return $schema;
     }
 
     protected function getPrefixedTableName(): string

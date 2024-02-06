@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace DevMadeIt\Boiler\Commands;
 
-use DevMadeIt\Boiler\Generator;
-use Illuminate\Console\Command;
-use function Laravel\Prompts\search;
 use DevMadeIt\Boiler\Exceptions\BoilerException;
+use DevMadeIt\Boiler\Generator;
 use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
+use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\File;
+
+use function Laravel\Prompts\search;
 
 class BoilCommand extends Command implements PromptsForMissingInput
 {
@@ -39,7 +40,7 @@ class BoilCommand extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
-        $this->generator = new Generator($this);
+        $this->generator = new Generator();
         $this->generator->run($this->argument('model'));
     }
 
@@ -47,7 +48,7 @@ class BoilCommand extends Command implements PromptsForMissingInput
     {
         $path = app_path("Models/{$search}*.php");
         $files = collect(File::glob($path));
-        $models = $files->map(fn(string $modelPath) => basename($modelPath, '.php'));
+        $models = $files->map(fn (string $modelPath) => basename($modelPath, '.php'));
 
         return $models->toArray();
     }

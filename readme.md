@@ -24,7 +24,11 @@ Run `php artisan boiler:all MODEL_NAME`, i.e. `php artisan boiler:all User`
 ## Roadmap
 - [ ] Generate PHP annotations for Laravel model 
 - [ ] Generate PHP relations for Laravel model 
-- [ ] Generate Laravel resources & resource collections
+- [x] Generate Laravel resources & resource collections
+  - [x] Resource
+  - [x] Resource annotations
+  - [ ] Resource annotations types
+  - [x] Resource collection
 - [ ] Generate resource REST API controllers
 - [ ] Generate TypeScript from database migrations
   - [x] interface

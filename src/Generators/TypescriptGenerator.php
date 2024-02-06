@@ -6,12 +6,11 @@ namespace DevMadeIt\Boiler\Generators;
 
 use DevMadeIt\Boiler\Schema\ColumnSchema;
 use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 
-class TypescriptGenerator
+class TypescriptGenerator extends BaseGenerator
 {
     public string $content = '';
 
@@ -35,9 +34,9 @@ class TypescriptGenerator
 
     public function __construct(
         protected string $model,
-        protected Command $command,
         protected ModelSchemaCollection $columns,
     ) {
+        parent::__construct();
         $this->indent = config('boiler.ts.indent', $this->indent);
         $this->modelsPath = config('boiler.ts.models.path', $this->modelsPath);
         $this->interfacePath = config('boiler.ts.interfaces.path', $this->interfacePath);
@@ -82,7 +81,7 @@ class TypescriptGenerator
 
             $content[] = implode("\n", $elements['parts']);
 
-            $this->command->info("- writing: {$filename}");
+            $this->info("- writing: {$filename}");
 
             File::put(base_path($filename), implode("\n", $content));
         }
