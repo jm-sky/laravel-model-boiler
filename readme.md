@@ -13,7 +13,7 @@ This package is aimed to help developers to quickly generate PHP & TypeScript mo
 
 - Publish config file
   
-   `php artisan vendor:publish --tag=boiler-config`
+   `php artisan vendor:publish --provider="DevMadeIt\Boiler\BoilerServiceProvider"`
 
 ## Usage
 Run `php artisan boiler:all MODEL_NAME`, i.e. `php artisan boiler:all User`
