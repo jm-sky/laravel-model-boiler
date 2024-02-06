@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace DevMadeIt\Boiler;
 
-use DevMadeIt\Boiler\Exceptions\BoilerException;
-use DevMadeIt\Boiler\Generators\TypescriptGenerator;
-use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
-use DevMadeIt\Boiler\Schema\SchemaLoader;
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
+use DevMadeIt\Boiler\BoilerGenerator;
+use DevMadeIt\Boiler\Schema\SchemaLoader;
+use DevMadeIt\Boiler\Exceptions\BoilerException;
+use DevMadeIt\Boiler\Schema\ModelSchemaCollection;
+use DevMadeIt\Boiler\Generators\TypescriptGenerator;
 
 class Generator
 {
@@ -43,7 +44,10 @@ class Generator
         if ($this->generateTypescript) {
             (new TypescriptGenerator($this->model, $this->command, $this->columns))->run();
         }
-        // if ($this->tsGenInterface) $this->generateTsInterface();
+        
+        $boilerGenerator = new BoilerGenerator($this->modelClassName);
+        $boilerGenerator->loadSchema();
+        $boilerGenerator->generate();
     }
 
     /**
